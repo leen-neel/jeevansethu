@@ -1,16 +1,113 @@
 ---
-
+import Layout from "../layouts/Layout.astro";
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout>
+  <!-- Hero Section -->
+  <section
+    class="bg-background min-h-screen flex items-center justify-center px-6 py-16 text-white"
+  >
+    <div
+      class="max-w-7xl w-full grid grid-cols-1 md:grid-cols-2 gap-12 items-center"
+    >
+      <div class="space-y-6">
+        <h1
+          class="text-4xl sm:text-5xl font-bold text-foreground tracking-tight"
+        >
+          <img src="/logo.png" alt="logo" />
+        </h1>
+        <p class="text-sm sm:text-xl text-muted-foreground max-w-xl">
+          JeevanSetu is a healthcare initiative in Kolkata that provides mobile
+          medical units, telemedicine services, and essential diagnostic tools
+          to underserved communities, including the elderly, disabled,
+          low-income families, and rural residents. Using a fleet of smart
+          vehicles, including vans, double-decker buses, and converted trams,
+          JeevanSetu delivers on-the-spot healthcare, medicines, and health
+          education. The initiative ensures accessible, efficient care by
+          leveraging digital services, telemedicine, and partnerships with local
+          hospitals and clinics, aiming to bridge the gap in healthcare access
+          across Kolkata.
+        </p>
+        <div class="flex space-x-4">
+          <a
+            href="#get-started"
+            class="px-6 py-3 rounded-2xl text-white bg-blue-400 hover:bg-primary/90 transition font-semibold shadow-lg"
+          >
+            Get Started
+          </a>
+        </div>
+      </div>
+      <div class="relative w-full h-80 md:h-full">
+        <img
+          src="/hero.jpg"
+          alt="Hero Illustration"
+          class="object-contain w-full h-full rounded-2xl"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- Join Waitlist Section -->
+  <section class="bg-muted py-16 px-6 text-foreground">
+    <div class="max-w-2xl mx-auto text-center">
+      <h2 class="text-3xl sm:text-4xl font-bold mb-4">Join the Waitlist</h2>
+      <p class="text-lg text-muted-foreground mb-8">
+        Be the first to know when we launch. Get exclusive early access!
+      </p>
+      <form id="waitlist-form" class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <input
+          type="text"
+          name="name"
+          placeholder="Your Name"
+          required
+          class="px-4 py-3 rounded-xl border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+        />
+        <input
+          type="email"
+          name="email"
+          placeholder="Your Email"
+          required
+          class="px-4 py-3 rounded-xl border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+        />
+        <button
+          type="submit"
+          class="px-4 py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl shadow transition"
+        >
+          Join Waitlist
+        </button>
+      </form>
+      <p id="waitlist-message" class="mt-4 text-sm"></p>
+    </div>
+  </section>
+
+  <script type="module">
+    const form = document.querySelector("#waitlist-form");
+    const message = document.querySelector("#waitlist-message");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const name = formData.get("name");
+      const email = formData.get("email");
+
+      try {
+        const res = await fetch("/api/join-waitlist", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email }),
+        });
+
+        if (res.ok) {
+          message.textContent = "You're on the list! 🎉";
+          message.classList.add("text-green-500");
+          form.reset();
+        } else {
+          throw new Error("Failed to join waitlist.");
+        }
+      } catch (err) {
+        message.textContent = "Something went wrong. Please try again.";
+        message.classList.add("text-red-500");
+      }
+    });
+  </script>
+</Layout>
